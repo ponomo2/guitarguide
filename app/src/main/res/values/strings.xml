@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Guitar Guide</string>
+    <string name="app_name_rus">Гитарный гид</string>
+    <string name="title_menu_rus">Главное меню</string>
+    <string name="button_lessons_list">Уроки</string>
+    <string name="button_metronomoe">Метроном</string>
+    <string name="button_favorites">Избранное</string>
+    <string name="button_achievements">Достижения</string>
+    <string name="button_support">Обратная связь</string>
+
+    <string name="title_lessons_list">Список уроков</string>
+
+    <string name="title_lesson">Урок</string>
+    <string name="tab_theory">Теория</string>
+    <string name="tab_practice">Практика</string>
+    <string name="dropdown_">Теория</string>
+</resources>
