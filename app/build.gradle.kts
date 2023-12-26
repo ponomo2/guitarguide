@@ -41,6 +41,7 @@ android {
     }
     buildFeatures {
         compose = true
+        viewBinding = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.7"
@@ -53,7 +54,14 @@ android {
 }
 
 dependencies {
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     val navVersion = "2.7.5"
+    val fragmentVersion = "1.6.2"
+
+    implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("androidx.fragment:fragment-ktx:$fragmentVersion")
+
+    implementation("com.google.android.material:material:1.4.0")
     implementation("androidx.navigation:navigation-compose:$navVersion")
     implementation("androidx.compose.material3:material3:1.0.0-alpha02")
 
