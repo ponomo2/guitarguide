@@ -38,13 +38,17 @@ import com.example.myapplication.db.lessons.Lesson
 @Composable
 fun FavoritesScreen(
     viewModel: LessonViewModel = viewModel(factory = AppViewModelProvider.Factory),
-    navController: NavHostController) {
+    navController: NavHostController
+) {
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text("Избранное"
-                ) },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors (
+                title = {
+                    Text(
+                        "Избранное"
+                    )
+                },
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.surface,
                 ),
@@ -53,10 +57,12 @@ fun FavoritesScreen(
                         onClick = { navController.popBackStack() },
                         colors = IconButtonDefaults.iconButtonColors(
                             contentColor = MaterialTheme.colorScheme.inversePrimary
-                        )) {
+                        )
+                    ) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Back")
+                            contentDescription = "Back"
+                        )
                     }
                 }
             )
@@ -67,7 +73,8 @@ fun FavoritesScreen(
                 .fillMaxSize()
                 .padding(
                     vertical = paddingValues.calculateTopPadding(),
-                    horizontal = 20.dp),
+                    horizontal = 15.dp
+                ),
             verticalArrangement = Arrangement.spacedBy(
                 space = 10.dp,
                 alignment = Alignment.Top
@@ -75,11 +82,15 @@ fun FavoritesScreen(
             horizontalAlignment = Alignment.Start
         ) {
             Spacer(modifier = Modifier.size(20.dp))
+
             val lessons: List<Lesson> = viewModel.getSavedLessons()
+
             lessons.forEach {
                 Button(
                     onClick = {
-                        navController.navigate(route = Routes.Lesson.route + "/${it.id}")
+                        navController.navigate(
+                            route = Routes.Lesson.route + "/${it.id}" + "/true"
+                        )
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.background,
@@ -90,7 +101,6 @@ fun FavoritesScreen(
                 }
             }
             for (lessonNum in 1..7) {
-
             }
         }
     }

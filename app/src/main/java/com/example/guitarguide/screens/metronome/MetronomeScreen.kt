@@ -14,11 +14,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -35,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -45,8 +49,10 @@ import com.example.guitarguide.AppViewModelProvider
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MetronomeScreen(viewModel: MetronomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel(
-    factory = AppViewModelProvider.Factory),
+fun MetronomeScreen(
+    viewModel: MetronomeViewModel = androidx.lifecycle.viewmodel.compose.viewModel(
+        factory = AppViewModelProvider.Factory
+    ),
     navController: NavHostController
 ) {
     Scaffold(
@@ -76,33 +82,34 @@ fun MetronomeScreen(viewModel: MetronomeViewModel = androidx.lifecycle.viewmodel
                 }
             )
         }
-    ) { _ ->
-        val state = remember {
-            mutableStateOf("")
+    ) { paddingValues ->
+        var state by remember {
+            mutableStateOf("60")
         }
-        val isError = remember {
+        var isError by remember {
             mutableStateOf(false)
         }
         var checked by remember { mutableStateOf(false) }
+
         fun validateNumber() {
             try {
-                when (state.value.toLong()) {
+                when (state.toLong()) {
                     !in viewModel.lowestTempo..viewModel.highestTempo -> {
-                        isError.value = true
+                        isError = true
                     }
-
-                    else -> isError.value = false
+                    else -> isError = false
                 }
             } catch (e: NumberFormatException) {
-                isError.value = true
-                state.value = ""
+                isError = true
+                state = ""
                 viewModel.stopMetronome()
             }
         }
 
         Column(
             modifier = Modifier
-                .fillMaxSize(),
+                .fillMaxSize()
+                .padding(paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -111,60 +118,71 @@ fun MetronomeScreen(viewModel: MetronomeViewModel = androidx.lifecycle.viewmodel
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Button(
+                IconButton(
                     onClick = {
                         try {
-                            state.value = (state.value.toLong() - 1).toString()
+                            state = (state.toLong() - 1).toString()
                             validateNumber()
                         } catch (e: NumberFormatException) {
-                            isError.value = true
-                            state.value = ""
+                            isError = true
+                            state = ""
                         }
                     },
                     modifier = Modifier
-                        .width(60.dp)
-                        .height(60.dp)
+                        .width(100.dp)
+                        .height(100.dp),
                 ) {
-                    Text(text = "-", fontSize = 30.sp)
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowLeft,
+                        contentDescription = "minus button",
+                        modifier = Modifier
+                            .width(60.dp)
+                            .height(60.dp)
+                    )
                 }
                 OutlinedTextField(
-                    value = state.value,
+                    value = state,
                     onValueChange = {
-                        state.value = it
+                        state = it
                         validateNumber()
                         if (checked) {
-                            viewModel.restartMetronome(state.value)
+                            viewModel.restartMetronome(state)
                         }
                     },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number
                     ),
-                    isError = isError.value,
+                    isError = isError,
                     singleLine = true,
                     textStyle = TextStyle(fontSize = 40.sp),
                     modifier = Modifier
                         .width(120.dp)
                         .height(100.dp),
-                    placeholder = { Text(text = "60", fontSize = 40.sp, color = Color.LightGray) }
                 )
-                Button(
+                IconButton(
                     onClick = {
                         try {
-                            state.value = (state.value.toLong() + 1).toString()
+                            state = (state.toLong() + 1).toString()
                             validateNumber()
                         } catch (e: NumberFormatException) {
-                            isError.value = true
-                            state.value = ""
+                            isError = true
+                            state = ""
                         }
                     },
                     modifier = Modifier
-                        .width(60.dp)
-                        .height(60.dp)
+                        .width(100.dp)
+                        .height(100.dp)
                 ) {
-                    Text(text = "+", fontSize = 30.sp)
+                    Icon(
+                        imageVector = Icons.Default.KeyboardArrowRight,
+                        contentDescription = "plus button",
+                        modifier = Modifier
+                            .width(60.dp)
+                            .height(60.dp)
+                    )
                 }
             }
-            if (isError.value) {
+            if (isError) {
                 Text(
                     modifier = Modifier.padding(start = 16.dp),
                     text = "Ритм не может быть более 210 и менее 40",
@@ -177,7 +195,7 @@ fun MetronomeScreen(viewModel: MetronomeViewModel = androidx.lifecycle.viewmodel
                 onCheckedChange = {
                     checked = it
                     if (checked) {
-                        viewModel.startMetronome(state.value)
+                        viewModel.startMetronome(state)
                     } else {
                         viewModel.stopMetronome()
                     }

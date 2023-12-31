@@ -1,6 +1,9 @@
 package com.example.guitarguide.screens.metronome
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.guitarguide.metronome.Metronome
@@ -28,7 +31,6 @@ class MetronomeViewModel(): ViewModel() {
             Metronome.start(bpm.toLong())
         }
         catch (e: NumberFormatException) {
-            Log.d("ok", "notok")
         }
     }
 
